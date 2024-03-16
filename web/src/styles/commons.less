@@ -1,0 +1,72 @@
+//-------------Colors-------------------
+@primary-color:#3873f0;     //全局主色
+@link-color:#1890ff;        //链接色
+@success-color:#22bf87;     //成功色
+@warning-color:#f67770;     //警告色
+@error-color:#f35248;       //错误色
+@like:red;                  //喜欢
+
+
+//-------------中性色-------------------
+@gray-1:#202020;
+@gray-2:#585858;
+@gray-3:#949494;
+@gray-9:#f6f6f6;
+@gray-10:#ffffff;
+
+
+//-------------font--------------------
+@size-12: 12px;
+@size-14: 14px;
+@size-16: 16px;
+
+
+//-------------间距---------------------
+@padding-4: 4px;
+@padding-8: 8px;
+@padding-12: 12px;
+@padding-16: 16px;
+@padding-20: 20px;
+
+//------------动画---------------------
+@tr:all 0.3s;
+
+//全局控制
+body{
+    padding: 0px;
+    margin: 0px;
+    line-height: 1.5;
+    color: @gray-1;
+    font-size: @size-14;
+    background-color: @gray-10;
+    transition: all 0.3s;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+p{
+    padding: 0px;
+    margin: 0px;
+}
+li{
+    list-style: none;
+}
+img{
+    padding: 0px;
+    margin: 0px;
+    display: block;
+}
+a{
+    text-decoration: none;
+    &:hover{
+        text-decoration: underline;
+    }
+}
+input,textarea{
+    outline: none;
+}
+
+@font-face {
+    font-family: fa;
+    src: url(@/assets/fonts/zxh-zyxt.ttf);
+}
