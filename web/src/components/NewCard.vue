@@ -140,7 +140,7 @@ export default {
     .label {
         display: flex;
         flex-wrap: wrap;
-        border: 1px solid red;
+        // border: 1px solid red;
         width: 320px;
 
         .label-li {

@@ -9,14 +9,14 @@
     </div>
     <div class="card" :style="{ width: nWidth + 'px' }">
       <note-card-vue v-for="(e, index) in note" :key="index" :note="e" class="card-inner" :width="'288px'"
-        :class="{ cardselected: index == cardselected }" @click="seletedCard(index)"></note-card-vue>
+        :class="{ cardSelected: index == cardSelected }" @click="seletedCard(index)"></note-card-vue>
     </div>
     <div class="add" :style="{ bottom: addBottom + 'px' }" @click="addCard" v-show="!modal">
       <span class="iconfont icon-tianjia-"></span>
     </div>
     <yk-modal-vue :title="title" @cloose="changeModal" :isModal="modal">
-      <new-card-vue :id="id" @addClose="changeModal()" v-if="cardselected==-1"></new-card-vue>
-      <card-detail-vue v-if="cardselected != -1"></card-detail-vue>
+      <new-card-vue :id="id" @addClose="changeModal()" v-if="cardSelected==-1"></new-card-vue>
+      <card-detail-vue v-if="cardSelected != -1" :card="note[cardSelected]"></card-detail-vue>
     </yk-modal-vue>
   </div>
 </template>
@@ -41,7 +41,7 @@ export default {
       addBottom: 30,   //add按钮距离底部高度
       title: '写留言', //新建标题
       modal: false,    //是否调用弹窗
-      cardselected: -1, //当前选择开片
+      cardSelected: -1, //当前选择开片
     }
   },
 
@@ -98,11 +98,11 @@ export default {
     //选择卡片
     seletedCard(e) {
       this.title = "";
-      if (e != this.cardselected) {
-        this.cardselected = e;
+      if (e != this.cardSelected) {
+        this.cardSelected = e;
         this.modal = true;
       } else {
-        this.cardselected = -1;
+        this.cardSelected = -1;
         this.modal = false;
       }
     }
@@ -184,7 +184,7 @@ export default {
       margin: 6px;
     }
 
-    .cardselected {
+    .cardSelected {
       border: 1px solid @primary-color;
     }
   }

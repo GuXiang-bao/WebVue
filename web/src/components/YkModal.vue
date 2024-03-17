@@ -106,7 +106,7 @@ props;
     }
 
     .yk-modal-main {
-        border: 1px solid red;
+        // border: 1px solid red;
         height: 100%;
         overflow-y: auto;
         padding-bottom: 116px;
