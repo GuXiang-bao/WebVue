@@ -1,6 +1,12 @@
 # WebVue
 留言墙作业 vue+nodejs+mysql
 
+C:\Users\zh\Desktop\发言墙\web>npm list -g @vue/cli
+C:\Users\zh\AppData\Roaming\npm
+└── @vue/cli@4.5.17
+
+"vue": "^3.2.13",
+
 更新中。。。
 
 # 项目来自b站 up yike陈
