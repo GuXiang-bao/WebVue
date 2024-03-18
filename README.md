@@ -7,6 +7,9 @@ C:\Users\zh\AppData\Roaming\npm
 
 "vue": "^3.2.13",
 
+C:\Users\zh\Desktop\发言墙\web>node -v
+v18.12.1
+
 更新中。。。
 
 # 项目来自b站 up yike陈
