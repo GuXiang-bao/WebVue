@@ -48,9 +48,9 @@ export default {
         }
     },
 
-    created(){
-        // console.log(this.card);
-    }
+    // created(){
+    //     // console.log(this.card);
+    // }
 }
 </script>
 

@@ -79,7 +79,7 @@ export const photo = Mock.mock({
         "report|0-20":0,
 
         //类型
-        "type":0,
+        "type":1,
     }]
 })
 

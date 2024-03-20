@@ -7,20 +7,22 @@
       <p class="label-list" :class="{ lbselected: nlabel == index }" v-for="(e, index) in label[id]" :key="index"
         @click="selectNode(index)">{{ e }}</p>
     </div>
-    <div class="card" :style="{ width: nWidth + 'px' }" v-show="id==0">
+    <div class="card" :style="{ width: nWidth + 'px' }" v-show="id == 0">
       <note-card-vue v-for="(e, index) in note" :key="index" :note="e" class="card-inner" :width="'288px'"
         :class="{ cardSelected: index == cardSelected }" @click="seletedCard(index)"></note-card-vue>
     </div>
-    <div class="photo" v-show="id==1">
-      <photo-card-vue :photo="e" class="photo-card" v-for="(e,index) in photo" :Key="index"></photo-card-vue>
+    <div class="photo" v-show="id == 1">
+      <photo-card-vue :photo="e" class="photo-card" v-for="(e, index) in photo" :key="index"
+        @click="seletedCard(index)"></photo-card-vue>
     </div>
     <div class="add" :style="{ bottom: addBottom + 'px' }" @click="addCard" v-show="!modal">
       <span class="iconfont icon-tianjia-"></span>
     </div>
-    <yk-modal-vue :title="title" @cloose="changeModal" :isModal="modal">
-      <new-card-vue :id="id" @addClose="changeModal()" v-if="cardSelected==-1"></new-card-vue>
-      <card-detail-vue v-if="cardSelected != -1" :card="note[cardSelected]"></card-detail-vue>
+    <yk-modal-vue :title="title" @cloose="closeModal" :isModal="modal">
+      <new-card-vue :id="id" @addClose="closeModal()" v-if="cardSelected == -1"></new-card-vue>
+      <card-detail-vue v-if="cardSelected != -1" :card="cards[cardSelected]"></card-detail-vue>
     </yk-modal-vue>
+    <yk-viewer-vue :isView="view" :photos = "photoArr" :nowNumber="cardSelected" @viewSeitch="viewSeitch"></yk-viewer-vue>
   </div>
 </template>
 
@@ -31,23 +33,25 @@ import YkModalVue from '@/components/YkModal.vue';
 import NewCardVue from '@/components/NewCard.vue';
 import CardDetailVue from '@/components/CardDetail.vue';
 import PhotoCardVue from '@/components/PhotoCard.vue';
-
-import { note,photo } from "../../mock/index";
+import YkViewerVue from '@/components/YkViewer.vue';
+import { note, photo } from "../../mock/index";
 
 export default {
   data() {
     return {
       wallType,
       label,
-      // id: 0,          //留言墙与照片墙的切换id
-      nlabel: -1,      //当前对应标签
+      // id: 0,           //留言墙与照片墙的切换id
+      nlabel: -1,         //当前对应标签
       note: note.data,
       photo: photo.data,
-      nWidth: 0,       //卡片的宽度
-      addBottom: 30,   //add按钮距离底部高度
-      title: '写留言', //新建标题
-      modal: false,    //是否调用弹窗
-      cardSelected: -1, //当前选择开片
+      photoArr:[],
+      nWidth: 0,          //卡片的宽度
+      addBottom: 30,      //add按钮距离底部高度
+      title: '写留言',    //新建标题
+      modal: false,       //是否调用弹窗
+      isView: false,      //预览大图
+      cardSelected: -1,   //当前选择卡片
     }
   },
 
@@ -57,14 +61,33 @@ export default {
     NewCardVue,
     CardDetailVue,
     PhotoCardVue,
+    YkViewerVue,
   },
 
-  computed:{
-    id(){
+  computed: {
+    //留言墙与照片墙的切换id
+    id() {
       return this.$route.query.id;
+    },
+
+    cards() {
+      let a = '';
+      if (this.$route.query.id == 0) {
+        a = note.data;
+      } else if (this.$route.query.id == 1) {
+        a = photo.data;
+      }
+      return a;
     }
   },
-
+  watch:{
+    id(){
+      this.modal = false;
+      this.view = false;
+      this.nlabel = -1;
+      this.cardSelected = -1;
+    }
+  },
   methods: {
     // 切换label
     selectNode(e) {
@@ -98,14 +121,17 @@ export default {
     },
 
     //新建card
-    addCard(){
-      this.title="写留言";
-      this.changeModal();
+    addCard() {
+      this.title = "写留言";
+      this.modal = true;
     },
 
     //切换弹窗打开与关闭
-    changeModal() {
+    closeModal() {
       this.modal = !this.modal;
+      if(this.id == 1){
+        this.view = false;
+      }
     },
 
     //选择卡片
@@ -114,9 +140,33 @@ export default {
       if (e != this.cardSelected) {
         this.cardSelected = e;
         this.modal = true;
+
+        if(this.id == 1){
+          this.view = true;
+        }
+
       } else {
         this.cardSelected = -1;
         this.modal = false;
+
+        if(this.id == 1){
+          this.view = false;
+        }
+      }
+    },
+    //获取图片列表
+    getPhoto(){
+      for (let icon = 0; icon < this.photo.length; icon++) {
+        this.photoArr.push(this.photo[icon].imgurl)
+      }
+    },
+
+    //切换图片
+    viewSeitch(e){
+      if (e == 0) {
+        this.cardSelected--;
+      }else{
+        this.cardSelected++;
       }
     }
 
@@ -124,6 +174,7 @@ export default {
 
   mounted() {
     this.notWidth();
+    this.getPhoto();
 
     //监听屏幕宽度变化
     window.addEventListener('resize', this.notWidth);
@@ -202,14 +253,14 @@ export default {
     }
   }
 
-  .photo{
+  .photo {
     width: 88%;
     margin: 0 auto;
     columns: 6;
     column-gap: @padding-4;
   }
 
-  .photo-card{
+  .photo-card {
     margin-bottom: @padding-4;
     break-inside: avoid;
   }
