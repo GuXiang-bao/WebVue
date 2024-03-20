@@ -5,8 +5,8 @@
             <p class="logo-name">一刻時光</p>
         </div>
         <div class="menu">
-            <yk-button-vue nom="cprimary" class="menu-message">留言墻</yk-button-vue>
-            <yk-button-vue nom="csecondary" class="menu-photo">照片墻</yk-button-vue>
+            <yk-button-vue :nom="id==0?'cprimary':'csecondary'" class="menu-message" @click="changWall(0)">留言墻</yk-button-vue>
+            <yk-button-vue :nom="id==1?'cprimary':'csecondary'" class="menu-photo" @click="changWall(1)">照片墻</yk-button-vue>
         </div>
         <div class="user">
             <div class="user-head"></div>
@@ -21,8 +21,26 @@
 
             }
         },
+
         components:{
             YkButtonVue,
+        },
+
+        computed:{
+            id(){
+                return this.$route.query.id;
+            }
+        },
+
+        methods:{
+
+        //切换
+        changWall(e){
+            this.$router.push({
+                query:{id:e},
+            })
+        }
+
         }
   }
   </script>

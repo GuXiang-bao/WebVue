@@ -7,9 +7,12 @@
       <p class="label-list" :class="{ lbselected: nlabel == index }" v-for="(e, index) in label[id]" :key="index"
         @click="selectNode(index)">{{ e }}</p>
     </div>
-    <div class="card" :style="{ width: nWidth + 'px' }">
+    <div class="card" :style="{ width: nWidth + 'px' }" v-show="id==0">
       <note-card-vue v-for="(e, index) in note" :key="index" :note="e" class="card-inner" :width="'288px'"
         :class="{ cardSelected: index == cardSelected }" @click="seletedCard(index)"></note-card-vue>
+    </div>
+    <div class="photo" v-show="id==1">
+      <photo-card-vue :photo="e" class="photo-card" v-for="(e,index) in photo" :Key="index"></photo-card-vue>
     </div>
     <div class="add" :style="{ bottom: addBottom + 'px' }" @click="addCard" v-show="!modal">
       <span class="iconfont icon-tianjia-"></span>
@@ -27,16 +30,19 @@ import NoteCardVue from '@/components/NoteCard.vue';
 import YkModalVue from '@/components/YkModal.vue';
 import NewCardVue from '@/components/NewCard.vue';
 import CardDetailVue from '@/components/CardDetail.vue';
-import { note } from "../../mock/index";
+import PhotoCardVue from '@/components/PhotoCard.vue';
+
+import { note,photo } from "../../mock/index";
 
 export default {
   data() {
     return {
       wallType,
       label,
-      id: 0,          //留言墙与照片墙的切换id
+      // id: 0,          //留言墙与照片墙的切换id
       nlabel: -1,      //当前对应标签
       note: note.data,
+      photo: photo.data,
       nWidth: 0,       //卡片的宽度
       addBottom: 30,   //add按钮距离底部高度
       title: '写留言', //新建标题
@@ -50,6 +56,13 @@ export default {
     YkModalVue,
     NewCardVue,
     CardDetailVue,
+    PhotoCardVue,
+  },
+
+  computed:{
+    id(){
+      return this.$route.query.id;
+    }
   },
 
   methods: {
@@ -187,6 +200,18 @@ export default {
     .cardSelected {
       border: 1px solid @primary-color;
     }
+  }
+
+  .photo{
+    width: 88%;
+    margin: 0 auto;
+    columns: 6;
+    column-gap: @padding-4;
+  }
+
+  .photo-card{
+    margin-bottom: @padding-4;
+    break-inside: avoid;
   }
 
   .add {
