@@ -26,7 +26,7 @@
         </div>
         <div class="footbt">
             <yk-button-vue size="max" nom="secondary" @click="colseModal(0)">丢弃</yk-button-vue>
-            <yk-button-vue size="max" class="submit">确定</yk-button-vue>
+            <yk-button-vue size="max" class="submit" @click="aipTest()">确定</yk-button-vue>
         </div>
     </div>
 </template>
@@ -72,6 +72,26 @@ export default {
         colseModal(data){
             this.$emit('addClose',data);
         },
+
+        //接口测试使用
+        aipTest(){
+            let data = {
+                type:0,
+                message:'测试使用',
+                name:'故乡',
+                userId:'21',
+                moment:new Date(),
+                label:0,
+                color:3,
+                imgurl:'www.huohuo90.com',
+            }
+
+            this.axios
+                .post("http://localhost:3000/insertwall",data) 
+                .then((res) => {
+                    console.log(res);
+                })               
+        }
     }
 }
 </script>

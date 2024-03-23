@@ -183,4 +183,11 @@ exports.deedbackCount = (wid, type) =>{
 //查询评论总数
 exports.commentCount = (wid) => {
     let _sql = `select count(*) as count from comments where wallId="${wid}";`
+    return query(_sql)
+}
+
+//是否点赞
+exports.likeCount = (wid,uid) => {
+    let _sql = `select count(*) as count from feedbacks where wallId="${wid}" and userId="${uid}" and type=0;`
+    return query(_sql)
 }
