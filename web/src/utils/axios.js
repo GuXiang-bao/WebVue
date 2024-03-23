@@ -14,7 +14,7 @@ service.interceptors.request.use(
 
     // 在发送请求之前做些什么
     config => {
-        return config; I
+        return config;
     },
 
     // 对请求错误做些什么 
@@ -40,3 +40,5 @@ service.interceptors.response.use(
         return Promise.reject();
     }
 );
+
+export default service;

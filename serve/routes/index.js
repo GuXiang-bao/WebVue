@@ -47,4 +47,14 @@ module.exports = function (app) {
     app.post('/insertfeedback',(req,res) => {
         controller.findCommentPage(req,res)
     })
+
+    //用户进入进行IP登记
+    app.post('/signip', (req,res) => {
+        var ip = req.ip;
+        // console.log(ip);
+        res.send({
+            code:200,
+            ip:ip,
+        })
+    })
 }

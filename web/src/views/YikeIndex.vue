@@ -10,6 +10,8 @@
 <script>
 import topBar from '@/components/TopBar.vue';
 import FootBarVue from '@/components/FootBar.vue'
+
+import {signIpApi} from '@/api/index'
 export default {
     data(){
         return{
@@ -26,15 +28,17 @@ export default {
 
     },
     created(){
-        // this.getUser();
+        this.getUser();
     },
     methods:{
         getUser(){
-            this.axios.post("http://www.huohuo90.com:3001/singin/match",{
-                data:'aaa',
-                pwd:'bbb',
-            }).then((res) => {
-                console.log(res)
+            signIpApi().then((res) => {
+                // console.log(res)
+                let user={
+                    id:res.ip,
+                }
+
+                this.$store.commit('getUser',user);
             })
         }
     }

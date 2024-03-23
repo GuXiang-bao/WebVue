@@ -16,3 +16,24 @@ export const dateOne = (e) =>{
     let dates = Y + '.' + M + '.' + D;
     return dates;
 }
+
+  // 将返回的流数据转换为url
+export const getObjectURL = (file) => {
+    let url = null;
+    if (window.createObjectURL != undefined) {
+      url = window.createObjectURL(file);
+    } else if (window.webkitURL != undefined) {
+      try {
+        url = window.webkitURL.createObjectURL(file);
+      } catch (error) {
+        console.log(error);
+      }
+    } else if (window.URL != undefined) {
+      try {
+        url = window.URL.createObjectURL(file);
+     } catch (error) {
+        console.log(error);
+      }
+    }
+   return url;
+  }

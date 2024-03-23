@@ -1,10 +1,22 @@
 <template>
     <div class="new-card">
-        <div class="colors">
+        <div class="colors" v-show="id==0">
             <p class="color-li" v-for="(e, index) in cardColor1" :key="index" :style="{ background: e }"
                 :class="{ colorselected: index == colorSelected }" @click="changColor(index)"></p>
         </div>
-        <div class="card-main" :style="{ background: cardColor[colorSelected] }">
+        <!-- 照片 -->
+        <div class="add-photo" v-if="id==1">
+            <input type="file" name="file" id="file" multiple="multiple" @change="showPhoto">
+            <div class="add-bt" v-if="url == ''">
+                <span class="iconfont icon-tianjia-"></span>
+            </div>
+            <div class="chang-bt" v-if="url != ''">
+                <span class="iconfont icon-xiugai"></span>
+            </div>
+            <div class="photo-div"><img :src="url"></div>
+        </div>
+        <!-- 卡片 -->
+        <div class="card-main" :style="{ background:id==0? cardColor[colorSelected] : cardColor[5] }">
             <textarea placeholder="留言。。。" class="message" maxlength="96" v-model="message"></textarea>
             <input type="text" placeholder="签名" class="name" v-model="name">
         </div>
@@ -26,12 +38,13 @@
         </div>
         <div class="footbt">
             <yk-button-vue size="max" nom="secondary" @click="colseModal(0)">丢弃</yk-button-vue>
-            <yk-button-vue size="max" class="submit" @click="aipTest()">确定</yk-button-vue>
+            <yk-button-vue size="max" class="submit" @click="submit()">确定</yk-button-vue>
         </div>
     </div>
 </template>
 <script>
 import { cardColor, cardColor1, label } from "@/utils/data";
+import {getObjectURL} from "@/utils/yksg";
 import YkButtonVue from "./YkButton.vue";
 export default {
     data() {
@@ -43,6 +56,8 @@ export default {
             labelSelected: 0,   //当前选择标签
             message:'',         //留言信息
             name:'aaa',            //签名
+            user:this.$store.state.user,
+            url:'',
         }
     },
 
@@ -73,7 +88,7 @@ export default {
             this.$emit('addClose',data);
         },
 
-        //提交wall
+        //提交x新建wall
         submit(){
             let name = '匿名'
             if (this.name) {
@@ -90,6 +105,13 @@ export default {
                 color: 5,
                 imgurl: '',
             };
+            console.log(data);
+        },
+
+        //图片显示
+        showPhoto(){
+            let aa = getObjectURL(document.getElementById("file").files[0]);
+            this.url = aa;
         },
 
         //接口测试使用
@@ -203,6 +225,62 @@ export default {
         padding-top: 10px;
         font-size: 12px;
         color: @gray-3;
+    }
+
+    .add-photo{
+        padding-bottom: 20px;
+        position: relative;
+
+        #file{
+            position: absolute;
+            z-index: 10;
+            top: -10;
+            height: 74px;
+            width: 64px;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .add-bt{
+            width: 64px;
+            height: 64px;
+            border: 1px solid  @gray-3;
+            border-radius: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .photo-div{
+            max-height: 200px;
+            width: 100%;
+            background: #f0f0f0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+
+            img{
+                width: 100%;
+            }
+        }
+
+        .chang-bt{
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            .icon-xiugai{
+                color: #fff;
+            }
+        }
     }
 
     .footbt{
