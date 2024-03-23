@@ -73,6 +73,25 @@ export default {
             this.$emit('addClose',data);
         },
 
+        //提交wall
+        submit(){
+            let name = '匿名'
+            if (this.name) {
+                name = this.name;
+            }
+
+            let data = {
+                type: this.id,
+                message: this.message,
+                name: name,
+                userId: this.user.id,
+                moment: new Date(),
+                label: this.nowlabel, 
+                color: 5,
+                imgurl: '',
+            };
+        },
+
         //接口测试使用
         aipTest(){
             let data = {
