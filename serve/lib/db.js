@@ -111,3 +111,76 @@ async function create(){
 }
 
 create();
+
+//新建walls 
+exports.insertWall = (value) => {
+    let _sql = "insert into walls set type=?,message=?,name=?,userId=?,moment=?,label=?,color=?,imgurl=?;"
+    return query(_sql,value);
+}
+
+//新建反馈
+exports.insertFeedback = (value) => {
+    let _sql = "insert into feedback set wallId=?,userId=?,type=?,moment=?;"
+    return query(_sql,value);
+}
+
+//新建评论
+exports.insertComment = (value) => {
+    let _sql = "insert into comments set wallId=?,userId=?,imgurl=?,moment=?,name=?;"
+    return query(_sql,value);
+}
+
+//删除墙，主表对应多条子表一起删除
+exports.deleteWall = (value) => {
+    let _sql = 
+    `delete a,b,c from walls a left 
+     join feedbacksb on a.id-b.wallId 
+     left 
+     join comments c on a.id=c.wallId 
+     where a.id="${id}";
+    `
+    return query(_sql,value);
+}
+
+//删除反馈
+exports.daleteFeedback = (id) =>{
+    let _sql = `delete from feedbacks where id="${id}";`
+    return query(_sql)
+}
+
+//删除评论
+exports.deleteComment = (id) =>{
+    let _sql = `delete from comments where id="${id}";`
+    return query(_sql)
+}
+
+//分页查询墙
+exports.findWallPage = (page, pagesize, type, label) => {
+    let _sql;
+    if (label == -1) {
+        _sql = `select * from walls where type="${type}" order by id desc limit ${(page - 1) * pagesize},${pagesize};`
+    } else {
+        _sql = `select * from walls where type="${type}" and label="${label}" order by id desc limit ${(page - 1 * pagesize)},${pagesize};`
+    }
+
+    return query(_sql)
+}
+
+//倒叙分页查询墙的评论
+exports.findCommentPage = (page,pagesize,id) => {
+    let _sql = `select * from comments where wallId="${id}" order by id desc limit ${(page - 1) * pagesize},${pagesize};`
+    return query(_sql)
+
+}
+
+//查询各反馈总数据
+exports.deedbackCount = (wid, type) =>{
+    let _sql = `select count(*) as count from feedbacks where wallId ="${wid}" and type="${type}";`
+    return query(_sql)
+
+}
+
+//查询评论总数
+exports.commentCount = (wid) => {
+    let _sql = `select count(*) as count from comments where wallId="${wid}";`
+}

@@ -7,4 +7,9 @@ module.exports = function (app) {
         res.type('html');
         res.render('test');
     })
+
+    //新建wall数据
+    app.post('/insertwall',(req,res) => {
+        controller.insertWall(req,res)
+    })
 }
