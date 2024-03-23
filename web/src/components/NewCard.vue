@@ -46,6 +46,7 @@
 import { cardColor, cardColor1, label } from "@/utils/data";
 import {getObjectURL} from "@/utils/yksg";
 import YkButtonVue from "./YkButton.vue";
+import { insertWallApi } from "@/api/index";
 export default {
     data() {
         return {
@@ -55,7 +56,7 @@ export default {
             colorSelected: 0,   //当前选择颜色
             labelSelected: 0,   //当前选择标签
             message:'',         //留言信息
-            name:'aaa',            //签名
+            name:'',            //签名
             user:this.$store.state.user,
             url:'',
         }
@@ -101,11 +102,22 @@ export default {
                 name: name,
                 userId: this.user.id,
                 moment: new Date(),
-                label: this.nowlabel, 
+                label: this.labelSelected, 
                 color: 5,
                 imgurl: '',
             };
-            console.log(data);
+            // console.log(data);
+
+            if (this.message && this.id == 0) {
+                data.color = this.colorSelected,
+                insertWallApi(data).then((res) => {
+                    console.log(res);
+                    this.message = '';
+                    this.$emit("clickbt", data);
+                    this.$message({type:"success",message:"留下了你的足迹。"});
+
+                });
+            } 
         },
 
         //图片显示

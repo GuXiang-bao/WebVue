@@ -19,10 +19,11 @@
       <span class="iconfont icon-tianjia-"></span>
     </div>
     <yk-modal-vue :title="title" @cloose="closeModal" :isModal="modal">
-      <new-card-vue :id="id" @addClose="closeModal()" v-if="cardSelected == -1"></new-card-vue>
+      <new-card-vue :id="id" @addClose="closeModal()" v-if="cardSelected == -1" @clickbt="newCard"></new-card-vue>
       <card-detail-vue v-if="cardSelected != -1" :card="cards[cardSelected]"></card-detail-vue>
     </yk-modal-vue>
     <yk-viewer-vue :isView="view" :photos = "photoArr" :nowNumber="cardSelected" @viewSeitch="viewSeitch"></yk-viewer-vue>
+
   </div>
 </template>
 
@@ -34,6 +35,7 @@ import NewCardVue from '@/components/NewCard.vue';
 import CardDetailVue from '@/components/CardDetail.vue';
 import PhotoCardVue from '@/components/PhotoCard.vue';
 import YkViewerVue from '@/components/YkViewer.vue';
+
 import { note, photo } from "../../mock/index";
 
 export default {
@@ -62,6 +64,7 @@ export default {
     CardDetailVue,
     PhotoCardVue,
     YkViewerVue,
+
   },
 
   computed: {
@@ -170,6 +173,11 @@ export default {
       }
     }
 
+  },
+
+  //向前端插入卡片
+  newCard(e){
+    console.log(e);
   },
 
   mounted() {
