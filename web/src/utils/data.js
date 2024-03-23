@@ -53,3 +53,15 @@ export const portrait = [
     'linear-gradient(180deg,#FFDC83 0%,#F88816 100%)',
     'linear-gradient(180deg,#FFBA8D 1%,#EB6423 100%)',
 ];
+
+//为空时候实现
+export const none = [
+    {
+        url: require('../assets/images/card.svg'),
+        msg: '半天憋不出p话',
+    },
+    {
+        url: require('../assets/images/photo.svg'),
+        msg: '没有回忆，孤独一人',
+    }
+]
