@@ -8,7 +8,7 @@
 "nodejs":"v18.12.1",
 "mysql":"8.0.36",
 
-**代码在[master](https://github.com/GuXiang-bao/WebVue/edit/master)分支**
+**代码在[master](https://github.com/GuXiang-bao/WebVue/tree/master)分支**
 
 # 运行方法
 运行方法在web和serve输入命令
