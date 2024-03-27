@@ -26,7 +26,7 @@
       <p>等着...</p>
     </div>
 
-    <p class="bottom-tip" v-show="page==0">这里没有东西，你在找什么</p>
+    <p class="bottom-tip" v-show="isOk == 2">这里没有东西，你在找什么</p>
 
     <div class="add" :style="{ bottom: addBottom + 'px' }" @click="addCard" v-show="!modal">
       <span class="iconfont icon-tianjia-"></span>
@@ -70,9 +70,9 @@ export default {
       modal: false,       //是否调用弹窗
       isView: false,      //预览大图
       cardSelected: -1,   //当前选择卡片
-      isOk: 2,        //是否加载中 -1为加载中, 0为没有拿到数据
+      isOk: -1,        //是否加载中 -1为加载中, 0为没有拿到数据
       page: 1,
-      pagesize: 100,
+      pagesize: 8,
     }
   },
 
@@ -92,7 +92,7 @@ export default {
       return this.$route.query.id;
     },
 
-    user(){
+    user() {
       return this.$store.state.user;
     }
   },
@@ -137,6 +137,11 @@ export default {
         this.addBottom = scrollTop + clientHeight + 230 - scrollHeight
       } else {
         this.addBottom = 30;
+      }
+
+      //加载更多
+      if (scrollTop + clientHeight == scrollHeight) {
+        this.getWallCard(this.id);
       }
     },
 
@@ -187,6 +192,8 @@ export default {
     //向前端插入卡片
     newCard(e) {
       console.log(e);
+      this.cards.unshift(e);
+      this.closeModal();
     },
 
     //加载动画
@@ -225,13 +232,17 @@ export default {
           if (res.message.length) {
             this.page++;
           } else { this.page = 0; }
-          setTimeout(() => {
-            if (this.cards.length > 0) {
-              this.isOk = 1;
-            } else {
-              this.isOk = 0;
+
+          if (this.cards.length > 0) {
+            this.isOk = 1;
+
+            if (this.page == 0) {
+              this.isOk = 2;
             }
-          }, 100)
+          } else {
+            this.isOk = 0;
+          }
+
 
           //如果为图片将图片单独拿出来
           if (this.id == 1) {
@@ -243,13 +254,13 @@ export default {
       }
     },
 
-    getUser(){
+    getUser() {
       let timer = setInterval(() => {
         if (this.user) {
           clearInterval(timer);
           this.getWallCard(this.id);
         }
-      },10)
+      }, 10)
     }
   },
 

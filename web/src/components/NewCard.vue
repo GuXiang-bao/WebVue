@@ -1,11 +1,11 @@
 <template>
     <div class="new-card">
-        <div class="colors" v-show="id==0">
+        <div class="colors" v-show="id == 0">
             <p class="color-li" v-for="(e, index) in cardColor1" :key="index" :style="{ background: e }"
                 :class="{ colorselected: index == colorSelected }" @click="changColor(index)"></p>
         </div>
         <!-- 照片 -->
-        <div class="add-photo" v-if="id==1">
+        <div class="add-photo" v-if="id == 1">
             <input type="file" name="file" id="file" multiple="multiple" @change="showPhoto">
             <div class="add-bt" v-if="url == ''">
                 <span class="iconfont icon-tianjia-"></span>
@@ -16,7 +16,7 @@
             <div class="photo-div"><img :src="url"></div>
         </div>
         <!-- 卡片 -->
-        <div class="card-main" :style="{ background:id==0? cardColor[colorSelected] : cardColor[5] }">
+        <div class="card-main" :style="{ background: id == 0 ? cardColor[colorSelected] : cardColor[5] }">
             <textarea placeholder="留言。。。" class="message" maxlength="96" v-model="message"></textarea>
             <input type="text" placeholder="签名" class="name" v-model="name">
         </div>
@@ -44,7 +44,7 @@
 </template>
 <script>
 import { cardColor, cardColor1, label } from "@/utils/data";
-import {getObjectURL} from "@/utils/yksg";
+import { getObjectURL } from "@/utils/yksg";
 import YkButtonVue from "./YkButton.vue";
 import { insertWallApi } from "@/api/index";
 export default {
@@ -55,10 +55,10 @@ export default {
             label,
             colorSelected: 0,   //当前选择颜色
             labelSelected: 0,   //当前选择标签
-            message:'',         //留言信息
-            name:'',            //签名
-            user:this.$store.state.user,
-            url:'',
+            message: '',         //留言信息
+            name: '',            //签名
+            user: this.$store.state.user,
+            url: '',
         }
     },
 
@@ -69,7 +69,7 @@ export default {
         }
     },
 
-    components:{
+    components: {
         YkButtonVue,
     },
 
@@ -85,12 +85,12 @@ export default {
         },
 
         //关闭窗口
-        colseModal(data){
-            this.$emit('addClose',data);
+        colseModal(data) {
+            this.$emit('addClose', data);
         },
 
         //提交x新建wall
-        submit(){
+        submit() {
             let name = '匿名'
             if (this.name) {
                 name = this.name;
@@ -102,7 +102,7 @@ export default {
                 name: name,
                 userId: this.user.id,
                 moment: new Date(),
-                label: this.labelSelected, 
+                label: this.labelSelected,
                 color: 5,
                 imgurl: '',
             };
@@ -110,40 +110,56 @@ export default {
 
             if (this.message && this.id == 0) {
                 data.color = this.colorSelected,
-                insertWallApi(data).then((res) => {
-                    console.log(res);
-                    this.message = '';
-                    this.$emit("clickbt", data);
-                    this.$message({type:"success",message:"留下了你的足迹。"});
+                    insertWallApi(data).then((res) => {
+                        console.log(res);
+                        let cardD = {
+                            type: this.id,
+                            message: this.message,
+                            name: name,
+                            userId: this.user.id,
+                            moment: new Date(),
+                            label: this.labelSelected,
+                            color: this.colorSelected,
+                            imgurl: '',
+                            id:res.message.insertId,
+                            islike:[{count:0}],
+                            like:[{count:0}],
+                            comcount:[{count:0}],
+                            report:[{count:0}],
+                            revoke:[{count:0}],
+                        };
+                        this.$emit("clickbt", cardD);
+                        this.message = '';
+                        this.$message({ type: "success", message: "留下了你的足迹。" });
 
-                });
-            } 
+                    });
+            }
         },
 
         //图片显示
-        showPhoto(){
+        showPhoto() {
             let aa = getObjectURL(document.getElementById("file").files[0]);
             this.url = aa;
         },
 
         //接口测试使用
-        aipTest(){
+        aipTest() {
             let data = {
-                type:0,
-                message:'测试使用',
-                name:'故乡',
-                userId:'21',
-                moment:new Date(),
-                label:0,
-                color:3,
-                imgurl:'www.huohuo90.com',
+                type: 0,
+                message: '测试使用',
+                name: '故乡',
+                userId: '21',
+                moment: new Date(),
+                label: 0,
+                color: 3,
+                imgurl: 'www.huohuo90.com',
             }
 
             this.axios
-                .post("http://localhost:3000/insertwall",data) 
+                .post("http://localhost:3000/insertwall", data)
                 .then((res) => {
                     console.log(res);
-                })               
+                })
         }
     }
 }
@@ -233,17 +249,17 @@ export default {
         }
     }
 
-    .mzsm{
+    .mzsm {
         padding-top: 10px;
         font-size: 12px;
         color: @gray-3;
     }
 
-    .add-photo{
+    .add-photo {
         padding-bottom: 20px;
         position: relative;
 
-        #file{
+        #file {
             position: absolute;
             z-index: 10;
             top: -10;
@@ -253,10 +269,10 @@ export default {
             cursor: pointer;
         }
 
-        .add-bt{
+        .add-bt {
             width: 64px;
             height: 64px;
-            border: 1px solid  @gray-3;
+            border: 1px solid @gray-3;
             border-radius: 32px;
             display: flex;
             align-items: center;
@@ -264,7 +280,7 @@ export default {
             cursor: pointer;
         }
 
-        .photo-div{
+        .photo-div {
             max-height: 200px;
             width: 100%;
             background: #f0f0f0;
@@ -272,12 +288,12 @@ export default {
             display: flex;
             align-items: center;
 
-            img{
+            img {
                 width: 100%;
             }
         }
 
-        .chang-bt{
+        .chang-bt {
             position: absolute;
             top: 12px;
             left: 12px;
@@ -288,14 +304,14 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
-            
-            .icon-xiugai{
+
+            .icon-xiugai {
                 color: #fff;
             }
         }
     }
 
-    .footbt{
+    .footbt {
         padding: @padding-20;
         box-sizing: border-box;
         position: fixed;
@@ -305,7 +321,7 @@ export default {
         width: 100%;
         backdrop-filter: blur(10px);
 
-        .submit{
+        .submit {
             margin-left: @padding-20;
             width: 200px;
         }
