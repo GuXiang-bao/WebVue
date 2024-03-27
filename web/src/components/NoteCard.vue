@@ -4,16 +4,16 @@
             <p class="titme">{{dateOne(card.moment)}}</p>
             <p class="label">{{label[card.type][card.label]}}</p>
         </div>
-        <p class="message">{{ card.message }}</p>
+        <p class="message" @click="toDetail">{{ card.message }}</p>
         <div class="foot">
             <div class="foot-left">
-                <div class="icon">
+                <div class="icon" @click="clickLike">
                     <span class="iconfont icon-xiai" :class="{ islike:card.like[0].count > 0 }"></span>
                     <span class="value">{{ card.like[0].count }}</span>
                 </div>
-                <div class="icon">
-                    <span class="iconfont icon-liuyan"></span>
-                    <span class="value">{{ card.comment }}</span>
+                <div class="icon" v-show="card.comcount[0].count > 0">
+                    <span class="iconfont icon-liuyan" ></span>
+                    <span class="value">{{ card.comcount[0].count }}</span>
                 </div>
             </div>
             <div class="name">{{ card.name }}</div>
@@ -24,12 +24,14 @@
 <script>
 import { label,cardColor } from '@/utils/data';
 import { dateOne } from '@/utils/yksg';
+import { insertFeedbackApi } from '@/api/index'
 export default {
     data(){
         return{
             label,
             cardColor,
             dateOne,
+            user:this.$store.state.user,
         }
     },
 
@@ -48,6 +50,29 @@ export default {
         }
     },
 
+    methods:{
+        //显示详情
+        toDetail(){
+            this.$emit('toDetail');
+        },
+        //点击喜欢
+        clickLike(){
+            if (this.card.islike[0].count == 0) {
+                let data = {
+                    wallId:this.card.id,
+                    userId:this.user.id,
+                    type:0,
+                    moment: new Date(),
+                }
+
+                insertFeedbackApi(data).then(() => {
+                    //反馈完成
+                    this.card.like[0].count++;
+                    this.card.islike[0].count++;
+                })
+            }
+        }
+    },
     // created(){
     //     // console.log(this.card);
     // }

@@ -120,7 +120,7 @@ exports.insertWall = (value) => {
 
 //新建反馈
 exports.insertFeedback = (value) => {
-    let _sql = "insert into feedback set wallId=?,userId=?,type=?,moment=?;"
+    let _sql = "insert into feedbacks set wallId=?,userId=?,type=?,moment=?;"
     return query(_sql,value);
 }
 

@@ -9,7 +9,7 @@
     </div>
     <div class="card" :style="{ width: nWidth + 'px' }" v-show="id == 0">
       <note-card-vue v-for="(e, index) in cards" :key="index" :note="e" class="card-inner" :width="'288px'"
-        :class="{ cardSelected: index == cardSelected }" @click="seletedCard(index)"></note-card-vue>
+        :class="{ cardSelected: index == cardSelected }" @toDetail="seletedCard(index)"></note-card-vue>
     </div>
     <div class="photo" v-show="id == 1">
       <photo-card-vue :photo="e" class="photo-card" v-for="(e, index) in photo" :key="index"

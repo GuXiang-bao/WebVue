@@ -8,3 +8,6 @@ export const insertWallApi = data => fetch.post('/insertwall',data);
 
 //查询墙
 export const findWallPageApi = data => fetch.post('/findwallpage',data);
+
+//反馈
+export const insertFeedbackApi = data => fetch.post('/insertfeedback',data);
