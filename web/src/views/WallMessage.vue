@@ -8,7 +8,7 @@
         @click="selectNode(index)">{{ e }}</p>
     </div>
     <div class="card" :style="{ width: nWidth + 'px' }" v-show="id == 0">
-      <note-card-vue v-for="(e, index) in note" :key="index" :note="e" class="card-inner" :width="'288px'"
+      <note-card-vue v-for="(e, index) in cards" :key="index" :note="e" class="card-inner" :width="'288px'"
         :class="{ cardSelected: index == cardSelected }" @click="seletedCard(index)"></note-card-vue>
     </div>
     <div class="photo" v-show="id == 1">
@@ -26,8 +26,8 @@
       <p>等着...</p>
     </div>
 
-    <p class="bottom-tip" v-show="isOk == 2">你在找什么</p>
-    
+    <p class="bottom-tip" v-show="page==0">这里没有东西，你在找什么</p>
+
     <div class="add" :style="{ bottom: addBottom + 'px' }" @click="addCard" v-show="!modal">
       <span class="iconfont icon-tianjia-"></span>
     </div>
@@ -51,6 +51,7 @@ import YkViewerVue from '@/components/YkViewer.vue';
 import lottie from 'lottie-web';
 import loading from '@/assets/images/loading.json';
 import { photo } from "../../mock/index";
+import { findWallPageApi } from '@/api/index'
 
 export default {
   data() {
@@ -60,7 +61,7 @@ export default {
       none,
       // id: 0,           //留言墙与照片墙的切换id
       nlabel: -1,         //当前对应标签
-      note: '',
+      cards: [],
       photo: photo.data,
       photoArr: [],
       nWidth: 0,          //卡片的宽度
@@ -70,6 +71,8 @@ export default {
       isView: false,      //预览大图
       cardSelected: -1,   //当前选择卡片
       isOk: 2,        //是否加载中 -1为加载中, 0为没有拿到数据
+      page: 1,
+      pagesize: 100,
     }
   },
 
@@ -89,14 +92,8 @@ export default {
       return this.$route.query.id;
     },
 
-    cards() {
-      let a = '';
-      if (this.$route.query.id == 0) {
-        a = this.note;
-      } else if (this.$route.query.id == 1) {
-        a = photo.data;
-      }
-      return a;
+    user(){
+      return this.$store.state.user;
     }
   },
   watch: {
@@ -111,6 +108,10 @@ export default {
     // 切换label
     selectNode(e) {
       this.nlabel = e;
+      //清空当前数据
+      this.cards = [];
+      this.page = 1;
+      this.getWallCard(this.id);
     },
 
     // note的宽度
@@ -173,12 +174,6 @@ export default {
         }
       }
     },
-    //获取图片列表
-    getPhoto() {
-      for (let icon = 0; icon < this.photo.length; icon++) {
-        this.photoArr.push(this.photo[icon].imgurl)
-      }
-    },
 
     //切换图片
     viewSeitch(e) {
@@ -193,7 +188,7 @@ export default {
     newCard(e) {
       console.log(e);
     },
-  
+
     //加载动画
     loading() {
       if (this.isOk == -1) {
@@ -209,13 +204,60 @@ export default {
         })
       }
     },
+
+    //获取卡片
+    getWallCard(id) {
+      //只有page>0才执行
+      if (this.page > 0) {
+        this.isOk = -1;
+        let data = {
+          type: id,
+          page: this.page,
+          pagesize: this.pagesize,
+          userId: this.user.id,
+          label: this.nlabel,
+        }
+        // console.log(data);
+        findWallPageApi(data).then((res) => {
+          this.cards = this.cards.concat(res.message);
+          //设置下一次的page
+          // console.log(res.message);
+          if (res.message.length) {
+            this.page++;
+          } else { this.page = 0; }
+          setTimeout(() => {
+            if (this.cards.length > 0) {
+              this.isOk = 1;
+            } else {
+              this.isOk = 0;
+            }
+          }, 100)
+
+          //如果为图片将图片单独拿出来
+          if (this.id == 1) {
+            for (let i = 0; i < this.cards.length; i++) {
+              this.photoarr.push(this.cards[i].imgurl)
+            }
+          }
+        });
+      }
+    },
+
+    getUser(){
+      let timer = setInterval(() => {
+        if (this.user) {
+          clearInterval(timer);
+          this.getWallCard(this.id);
+        }
+      },10)
+    }
   },
 
 
   mounted() {
     this.notWidth();
-    this.getPhoto();
     this.loading();
+    this.getUser();
 
     //监听屏幕宽度变化
     window.addEventListener('resize', this.notWidth);
@@ -345,11 +387,11 @@ export default {
     }
   }
 
-  .loading{
+  .loading {
     text-align: center;
     width: 100%;
 
-    p{
+    p {
       margin-top: -12px;
       font-family: serif;
       font-size: 24px;
@@ -357,11 +399,12 @@ export default {
     }
   }
 
-  #lottile{
+  #lottile {
     margin-top: 20px;
     height: 150px;
   }
-  .bottom-tip{
+
+  .bottom-tip {
     text-align: center;
     color: @gray-3;
     padding: 20px;

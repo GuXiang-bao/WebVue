@@ -160,7 +160,7 @@ exports.findWallPage = (page, pagesize, type, label) => {
     if (label == -1) {
         _sql = `select * from walls where type="${type}" order by id desc limit ${(page - 1) * pagesize},${pagesize};`
     } else {
-        _sql = `select * from walls where type="${type}" and label="${label}" order by id desc limit ${(page - 1 * pagesize)},${pagesize};`
+        _sql = `select * from walls where type="${type}" and label="${label}" order by id desc limit ${(page - 1) * pagesize},${pagesize};`
     }
 
     return query(_sql)
@@ -174,7 +174,7 @@ exports.findCommentPage = (page,pagesize,id) => {
 }
 
 //查询各反馈总数据
-exports.deedbackCount = (wid, type) =>{
+exports.feedbackCount = (wid, type) =>{
     let _sql = `select count(*) as count from feedbacks where wallId ="${wid}" and type="${type}";`
     return query(_sql)
 

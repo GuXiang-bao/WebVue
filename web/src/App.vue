@@ -1,6 +1,6 @@
 <template>
   <router-view></router-view>
-  <p class="ab">pppppppppp</p>
+  <!-- <p class="ab">pppppppppp</p> -->
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="yk-node-card" :style="{ width: width, background:cardColor[card.imgurl] }">
+    <div class="yk-node-card" :style="{ width: width, background:cardColor[card.color] }">
         <div class="top">
             <p class="titme">{{dateOne(card.moment)}}</p>
             <p class="label">{{label[card.type][card.label]}}</p>
@@ -8,8 +8,8 @@
         <div class="foot">
             <div class="foot-left">
                 <div class="icon">
-                    <span class="iconfont icon-xiai"></span>
-                    <span class="value">{{ card.like }}</span>
+                    <span class="iconfont icon-xiai" :class="{ islike:card.like[0].count > 0 }"></span>
+                    <span class="value">{{ card.like[0].count }}</span>
                 </div>
                 <div class="icon">
                     <span class="iconfont icon-liuyan"></span>
@@ -122,6 +122,10 @@ export default {
                     color: @like;
 
                 }
+            }
+
+            .islike{
+                color: @like;
             }
         }
     }

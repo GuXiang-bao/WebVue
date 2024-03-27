@@ -19,32 +19,32 @@ module.exports = function (app) {
     })
 
     //新建评论
-    app.post('/insertfeedback',(req,res) => {
+    app.post('/insertcomment',(req,res) => {
         controller.insertComment(req,res)
     })
 
     //删除墙
-    app.post('/insertfeedback',(req,res) => {
+    app.post('/deletewall',(req,res) => {
         controller.deleteWall(req,res)
     })
 
     //删除反馈
-    app.post('/insertfeedback',(req,res) => {
+    app.post('/daletefeedback',(req,res) => {
         controller.daleteFeedback(req,res)
     })
 
     //删除评论
-    app.post('/insertfeedback',(req,res) => {
+    app.post('/deletecomment',(req,res) => {
         controller.deleteComment(req,res)
     })
 
     //分页查询wall并获取赞、举报、撤销数据
-    app.post('/insertfeedback',(req,res) => {
+    app.post('/findwallpage',(req,res) => {
         controller.findWallPage(req,res)
     })
 
     //倒叙分页查墙的评论
-    app.post('/insertfeedback',(req,res) => {
+    app.post('/findcommentpage',(req,res) => {
         controller.findCommentPage(req,res)
     })
 

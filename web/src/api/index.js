@@ -4,4 +4,7 @@ import fetch from '@/utils/axios'
 export const signIpApi = () => fetch.post('/signip');
 
 //新建wall
-export const insertWallApi = data => fetch.post('/insertWall',data);
+export const insertWallApi = data => fetch.post('/insertwall',data);
+
+//查询墙
+export const findWallPageApi = data => fetch.post('/findwallpage',data);
