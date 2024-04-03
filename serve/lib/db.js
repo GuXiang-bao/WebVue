@@ -126,7 +126,7 @@ exports.insertFeedback = (value) => {
 
 //新建评论
 exports.insertComment = (value) => {
-    let _sql = "insert into comments set wallId=?,userId=?,imgurl=?,moment=?,name=?;"
+    let _sql = "insert into comments set wallId=?,userId=?,imgurl=?,moment=?,comment=?,name=?;"
     return query(_sql,value);
 }
 

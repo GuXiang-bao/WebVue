@@ -1,22 +1,24 @@
 <template>
     <div class="yk-photo-card">
-        <img :src="require('../../static/' + photo.imgurl + '.jpg')" class="photo-img" />
-        <div class="photo-bg"></div>
-        <div class="photo-like">
-            <span class="iconfont icon-xiai"></span>
-            <span class="like-data">{{ photo.like }}</span>
+        <img :src="baseUrl + photo.imgurl" class="photo-img" />
+        <div class="photo-bg" @click="toDetail"></div>
+        <div class="photo-like" @click="clickLike">
+            <span class="iconfont icon-xiai" :class="{islike:card.islike[0].count > 0}"></span>
+            <span class="like-data">{{ photo.like[0].count }}</span>
         </div>
     </div>
 </template>
 <script>
 import { label, cardColor } from '@/utils/data';
-
+import { baseUrl } from '@/utils/env';
+import { insertFeedbackApi } from '@/api/index'
 export default {
     data() {
         return {
             label,
             cardColor,
-
+            baseUrl,
+            user:this.$store.state.user,
         }
     },
 
@@ -28,10 +30,31 @@ export default {
 
     computed: {
         card() {
-            return this.note;
+            return this.photo;
         }
     },
+    methods:{
+        toDetail(){
+            this.$emit('toDetail');
+        },
+         //点击喜欢
+         clickLike(){
+            if (this.card.islike[0].count == 0) {
+                let data = {
+                    wallId:this.card.id,
+                    userId:this.user.id,
+                    type:0,
+                    moment: new Date(),
+                }
 
+                insertFeedbackApi(data).then(() => {
+                    //反馈完成
+                    this.card.like[0].count++;
+                    this.card.islike[0].count++;
+                })
+            }
+        }
+    },
     created() {
         // console.log(this.card);
     }
@@ -56,7 +79,7 @@ export default {
         width: 100%;
         opacity: 0;
         transition: @tr;
-
+        cursor: pointer;
     }
 
     .photo-like {
@@ -93,6 +116,10 @@ export default {
             opacity: 1;
 
         }
+        
+        .islike{
+                color: @like;
+            }
     }
 }
 </style>

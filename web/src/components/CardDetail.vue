@@ -6,15 +6,15 @@
         </div>
         <note-card-vue :note="card"></note-card-vue>
         <div class="form">
-            <textarea class="message" placeholder="说点什么。。。"></textarea>
+            <textarea class="message" placeholder="说点什么。。。" v-model="discuss"></textarea>
             <div class="bt">
-                <input type="text" class="name" placeholder="签名">
-                <yk-button-vue>確定</yk-button-vue>
+                <input type="text" class="name" placeholder="签名" v-model="name">
+                <yk-button-vue :class="{notallowed: !isDis}" @click="submit">评论</yk-button-vue>
             </div>
         </div>
-        <p class="title">评论{{ card.comment }}</p>
-        <div class="commont">
-            <div class="commont-li" v-for="(e, index) in commont" :key="index">
+        <p class="title">评论{{ cards.comcount[0].count }}</p>
+        <div class="comment">
+            <div class="comment-li" v-for="(e, index) in comments" :key="index">
                 <div class="user-head" :style="{backgroundImage:portrait[e.imgurl]}"></div>
                 <div class="comm-m">
                     <div class="m-top">
@@ -22,26 +22,33 @@
                         <p class="time">{{ dateOne(e.moment) }}</p>
                     </div>
                     <div class="mm">
-                        {{ e.message }}
+                        {{ e.comment }}
                     </div>
                 </div>
             </div>
+            <p class="more" @click="getComment" v-show="nowpage>0">加载更多</p>
         </div>
     </div>
 </template>
 <script>
 import NoteCardVue from './NoteCard.vue';
 import YkButtonVue from './YkButton.vue';
-import { commont } from '../../mock/index';
+// import { comment } from '../../mock/index';
 import { portrait } from '@/utils/data';
 import { dateOne } from '@/utils/yksg';
+import { insertCommentApi,findCommentPagApi } from '@/api/index';
 
 export default {
     data() {
         return {
-            commont: commont.data,
+            comments: [],
             portrait,
             dateOne,
+            discuss:'',     //输入的内容
+            name:'匿名',        //用户名
+            user: this.$store.state.user,
+            nowpage:1,          //当前页
+            pagesize:8,     //一页多少条
         }
     },
 
@@ -50,11 +57,79 @@ export default {
             default: {}
         }
     },
-
+    computed:{
+        isDis(){
+            if (this.discuss && this.name) {
+                return true;
+            }else{
+                return false;
+            }
+        },
+        cards(){
+            return this.card;
+        }
+    },
     components: {
         NoteCardVue,
         YkButtonVue
     },
+    methods:{
+        //提交评论
+        submit(){
+            if (this.isDis){
+                //如果有用户就用头像，没有就用随机头像
+                let img = Math.floor(Math.random() * 14);
+                let data = {
+                    wallId: this.cards.id,
+                    userId: this.user.id,
+                    imgurl: img,
+                    moment: new Date(),
+                    name: this.name,
+                    comment: this.discuss,
+                };
+                console.log(data);
+                insertCommentApi(data).then(() => {
+                    this.comments.unshift(data);
+                    this.cards.comcount[0].count++;
+                    //清空评论框
+                    this.discuss = '';
+                })
+            }
+        },
+        //获取评论
+        getComment(){
+            if (this.nowpage > 0) {
+                let data = {
+                    id: this.card.id,
+                    page: this.nowpage,
+                    pagesize: this.pagesize,
+                }
+                console.log(data);
+
+                findCommentPagApi(data).then((res) => {
+                    this.comments = this.comments.concat(res.message);
+                    //设置下一次的page
+                    if (res.message.length == this.pagesize) {
+                        this.nowpage++;
+                    }else{
+                        this.nowpage = 0;
+                    }
+                })
+            }
+        },
+    },
+    mounted(){
+        this.getComment();
+    },
+    watch:{
+        card(){
+            //卡片发生变化
+
+            this.nowpage = 1;
+            this.comments = [];
+            this.getComment();
+        }
+    }
 }
 </script>
 <style lang='less' scoped>
@@ -119,7 +194,14 @@ export default {
         padding-top: 30px;
     }
 
-    .commont-li {
+    .more{
+        color: @gray-2;
+        text-align: center;
+        padding: 20px;
+        cursor: pointer;
+    }
+
+    .comment-li {
         display: flex;
         padding-bottom: 30px;
 

@@ -3,7 +3,7 @@
         <div class="yk-viewer" v-if="isView">
             <div class="bg"></div>
             <div class="viewer-photo">
-                <img :src="require('../../static/' + photos[nowNumber] + '.jpg')" class="photo-img" />
+                <img :src="baseUrl + photos[nowNumber]" class="photo-img" />
             </div>
             <div class="switch sw-left" @click="changeNumber(0)" v-show="nowNumber>0">
                 <span class="iconfont icon-xiangzuo1"></span>
@@ -15,7 +15,13 @@
     </transition>
 </template>
 <script>
+import { baseUrl } from '@/utils/env';
 export default {
+    data(){
+        return{
+            baseUrl,
+        }
+    },
     props:{
         photos:{
             default:[],

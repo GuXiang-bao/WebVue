@@ -62,4 +62,8 @@ export default{
     background: @gray-10;
     color: @gray-1;
 }
+.notallowed{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 </style>

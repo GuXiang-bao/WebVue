@@ -46,7 +46,7 @@
 import { cardColor, cardColor1, label } from "@/utils/data";
 import { getObjectURL } from "@/utils/yksg";
 import YkButtonVue from "./YkButton.vue";
-import { insertWallApi } from "@/api/index";
+import { insertWallApi,profileApi } from "@/api/index";
 export default {
     data() {
         return {
@@ -133,6 +133,8 @@ export default {
                         this.$message({ type: "success", message: "留下了你的足迹。" });
 
                     });
+            }else if(this.id == 1 && this.url){
+                this.updatePhoto(data);
             }
         },
 
@@ -141,6 +143,44 @@ export default {
             let aa = getObjectURL(document.getElementById("file").files[0]);
             this.url = aa;
         },
+
+        //图片提交
+        updatePhoto(data){
+            let file = document.getElementById("file");
+            if (file.files.length > 0) {
+                let formDate = new FormData();
+                formDate.append('file',file.files[0]);
+
+                //图片提交后端
+                profileApi(formDate).then((res) => {
+                    // console.log(res);
+                    data.imgurl = res;
+                    //数据存数据库
+                    insertWallApi(data).then((result) => {
+                        // console.log(res);
+                        let cardD = {
+                            type: this.id,
+                            message: this.message,
+                            name: data.name,
+                            userId: this.user.id,
+                            moment: new Date(),
+                            label: this.labelSelected,
+                            color: 5,
+                            imgurl: data.imgurl,
+                            id:result.message.insertId,
+                            islike:[{count:0}],
+                            like:[{count:0}],
+                            comcount:[{count:0}],
+                            report:[{count:0}],
+                            revoke:[{count:0}],
+                        };
+                        this.$emit("clickbt", cardD);
+                        this.message = '';
+                        this.$message({ type: "success", message: "留下了你的足迹。" });
+                    });
+                })
+            }
+        },  
 
         //接口测试使用
         aipTest() {

@@ -30,7 +30,7 @@ exports.insertFeeedback = async (req, res) => {
 exports.insertComment = async (req, res) => {
     let data = req.body;
     // console.log(data);
-    await dbModel.insertComment([data.wallId, data.userId, data.type, data.moment, data.comment, data.name]).then(result => {
+    await dbModel.insertComment([data.wallId, data.userId, data.imgurl, data.moment, data.comment, data.name]).then(result => {
         res.send({
             code: 200,
             message: result,

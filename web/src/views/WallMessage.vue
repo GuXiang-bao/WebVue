@@ -12,8 +12,8 @@
         :class="{ cardSelected: index == cardSelected }" @toDetail="seletedCard(index)"></note-card-vue>
     </div>
     <div class="photo" v-show="id == 1">
-      <photo-card-vue :photo="e" class="photo-card" v-for="(e, index) in photo" :key="index"
-        @click="seletedCard(index)"></photo-card-vue>
+      <photo-card-vue :photo="e" class="photo-card" v-for="(e, index) in cards" :key="index"
+      @toDetail="seletedCard(index)"></photo-card-vue>
     </div>
     <!-- 卡片状态 -->
     <div class="none-msg" v-if="isOk == 0">
@@ -50,7 +50,7 @@ import PhotoCardVue from '@/components/PhotoCard.vue';
 import YkViewerVue from '@/components/YkViewer.vue';
 import lottie from 'lottie-web';
 import loading from '@/assets/images/loading.json';
-import { photo } from "../../mock/index";
+// import { photo } from "../../mock/index";
 import { findWallPageApi } from '@/api/index'
 
 export default {
@@ -62,7 +62,7 @@ export default {
       // id: 0,           //留言墙与照片墙的切换id
       nlabel: -1,         //当前对应标签
       cards: [],
-      photo: photo.data,
+      // photo: photo.data,
       photoArr: [],
       nWidth: 0,          //卡片的宽度
       addBottom: 30,      //add按钮距离底部高度
@@ -247,7 +247,7 @@ export default {
           //如果为图片将图片单独拿出来
           if (this.id == 1) {
             for (let i = 0; i < this.cards.length; i++) {
-              this.photoarr.push(this.cards[i].imgurl)
+              this.photoArr.push(this.cards[i].imgurl)
             }
           }
         });
