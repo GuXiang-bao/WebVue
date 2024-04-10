@@ -83,7 +83,7 @@ export default {
     CardDetailVue,
     PhotoCardVue,
     YkViewerVue,
-
+    
   },
 
   computed: {
@@ -97,13 +97,17 @@ export default {
     }
   },
   watch: {
-    id() {
+    // 监听 id 计算属性的变化  
+    id() {  
       this.modal = false;
       this.view = false;
       this.nlabel = -1;
       this.cardSelected = -1;
-    }
+      // 当 id 的值发生变化时，调用 selectNode 方法  
+      this.selectNode(-1);  
+    }  
   },
+  
   methods: {
     // 切换label
     selectNode(e) {

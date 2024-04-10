@@ -15,6 +15,7 @@
   </template>
   <script>
   import YkButtonVue from './YkButton.vue';
+
   export default{
         data(){
             return {
@@ -37,7 +38,7 @@
         //切换
         changWall(e){
             this.$router.push({
-                query:{id:e},
+                query:{id:e}
             })
         }
 

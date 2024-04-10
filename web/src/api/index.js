@@ -21,3 +21,12 @@ export const findCommentPagApi = data => fetch.post('/findcommentpage',data);
 //上传图片
 export const profileApi = data => fetch.post('/profile',data);
 
+//删除墙
+export const deleteWallApi = data => fetch.post('/deletewall',data);
+
+//删除反馈
+export const daleteFeedbackApi = data => fetch.post('/daletefeedback',data);
+
+//删除评论
+export const deleteCommentApi = data => fetch.post('/deletecomment',data);
+
